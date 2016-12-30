@@ -1,0 +1,24 @@
+{
+  "name": "authentication_project",
+  "version": "1.0.0",
+  "description": "Testing passport authentication",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MJmT/auth.git"
+  },
+  "keywords": [
+    "auth",
+    "passoport"
+  ],
+  "author": "Manjunath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MJmT/auth/issues"
+  },
+  "homepage": "https://github.com/MJmT/auth#readme"
+}
