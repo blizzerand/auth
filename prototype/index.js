@@ -10,11 +10,14 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 //morgan for development
 app.use(morgan('dev'));
+app.use(passport.initialize());
 var port = process.env.PORT || 8080;
+require('./config/passport')(passport);
 
 //All routers are described here
 var homeRouter = require('./app/controllers/home.js');
-app.use(passport.initialize());
+require('./app/controllers/authentication.js')(app, passport);
+
 
 
 
@@ -26,6 +29,7 @@ next();
 })
 
 app.use('/home',homeRouter);
+
 
 
 console.log("listening to port ${port}");
