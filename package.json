@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/MJmT/auth/issues"
   },
-  "homepage": "https://github.com/MJmT/auth#readme"
+  "homepage": "https://github.com/MJmT/auth#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "passport": "^0.3.2"
+  }
 }
