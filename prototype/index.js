@@ -13,7 +13,7 @@ app.use(morgan('dev'));
 var port = process.env.PORT || 8080;
 
 //All routers are described here
-var homeRouter = require('./home/home.js');
+var homeRouter = require('./app/controllers/home.js');
 app.use(passport.initialize());
 
 

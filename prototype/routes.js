@@ -1,3 +1,3 @@
-var homeRouter = require('./home/home.js');
+var homeRouter = require('./app/controllers/home.js');
 
 module.exports = homeRouter;

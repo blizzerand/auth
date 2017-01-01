@@ -1,6 +1,6 @@
 var express = require('express');
 var mongoose = require('mongoose');
-var dbConfig = require('../config/db.js');
+var dbConfig = require('../../config/db.js');
 //Setting the router
 var routerHome = express.Router();
 
