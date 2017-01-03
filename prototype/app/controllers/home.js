@@ -19,7 +19,7 @@ routerHome.get('/', (request,response) => {
 	Home.find(function(err,homes) {
 		if(err)
 			response.json({'error':err});
-		response.json(homes);
+		response.json({homes});
 	});
 	//response.json({'body':'Successs', 'count':request.count});
 });
