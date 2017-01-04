@@ -5,10 +5,11 @@ var Schema = mongoose.Schema;
 var userSchema = new Schema({
 
         unique_id    : String, 
-        email        : String,
-        password     : String,
+        email: { type: String, required: true, unique: true},
+        password: { type: String, required: true},
         name         : String,
-        token        : String
+        token        : String,
+        homes        : [{ type : mongoose.Schema.Types.ObjectId, ref: 'Home' }]
     });
 
 // methods ======================

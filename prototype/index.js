@@ -24,7 +24,7 @@ var authRouter = require('./app/controllers/authentication.js');
 //All routers getting linked to the app
 app.use('/a',authRouter);
 app.use(jwtauth, function(request,response,next) {
-	//response.write(JSON.stringify(request.user_data));
+	response.write(JSON.stringify(request.user_data));
 next();
 })
 

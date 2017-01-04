@@ -40,8 +40,9 @@ var tokenValidation = function tokenValidation(request,response,next) {
 							type: true,
 							data: {
 								email: user.email,
-								name: user.name
-
+								name: user.name,
+								id: user._id,
+								unique_id: user.unique_id
 							}
 						};	
 						

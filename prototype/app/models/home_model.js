@@ -1,10 +1,11 @@
-var mangoose = require('mongoose');
+var mongoose = require('mongoose');
 
-Schema = mangoose.Schema;
+Schema = mongoose.Schema;
 
 
 homeSchema = new Schema({
-	name: String
+	name: { type: String, required: true},
+	administrator: {type : mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
 });
 
-module.exports = mangoose.model('Home', homeSchema);
+module.exports = mongoose.model('Home', homeSchema);
