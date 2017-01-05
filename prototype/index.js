@@ -17,17 +17,17 @@ var port = process.env.PORT || 8080;
 //All routers are described here
 var homeRouter = require('./app/controllers/home.js');
 var authRouter = require('./app/controllers/authentication.js');
-
+var userRouter = require('./app/controllers/user.js');
 
 
 
 //All routers getting linked to the app
 app.use('/a',authRouter);
 app.use(jwtauth, function(request,response,next) {
-	response.write(JSON.stringify(request.user_data));
+	response.write(JSON.stringify(request.user_data,null,2));
 next();
 })
-
+app.use('/user',userRouter);
 app.use('/home',homeRouter);
 
 

@@ -60,37 +60,53 @@ routerHome.post('/', (request,response) => {
 		if(err)
 			response.send(err);
 		else{
-		response.write(JSON.stringify({"message":`${home.name} created!`},null,2));
-		response.end();
+			response.write(JSON.stringify({"message":`${home.name} created!`},null,2));
+			response.end();
 		}
 	});
 });
 
 routerHome.put('/:home_id',(request,response) => {
-	Home.findById(request.params.home_id, (err,home) => {
+	Home.findOne({ $and:
+		[{"administrator": request.user_data.data.id},{"_id":request.params.home_id}]}, (err, home) => {
 		if(err) 
 			response.json({'error': err});
-		home.name = request.body.name;
-		home.save(err=> {
-			if(err)
-				response.send(err);
-			response.json({"message": `Home ${home.name} updated!`});
-		});
-	});
-});
-routerHome.delete('/:home_id', (request,response)=> {
-	Home.findById(request.params.home_id, (err,home) => {
-		if(err)
-			response.json({'error':err});
-		else {
-			Home.remove({
-				'_id': request.params.home_id
-			}, (err,home)=> {
+		else if(home) {
+			home.name = request.body.name;
+			home.save(err=> {
 				if(err)
-					response.json({"error":err});
-				response.json({"message":"Successfully deleted the entity"});
+					response.send(err);
+				else{
+					response.write(JSON.stringify({"message": `Home ${home.name} updated!`},null,2));
+					response.end();
+				}
 			});
 		}
+		else {				
+				response.write(JSON.stringify({type: false, message: "This page doesn't exist or you don't have rights to view this object"},null,2));
+				response.end();
+			}
+	});	
+});
+routerHome.delete('/:home_id', (request,response)=> {
+	Home.findOne({ $and:
+		[{"administrator": request.user_data.data.id},{"_id":request.params.home_id}]}, (err, home) => {
+		if(err)
+			response.json({'error':err});
+		else if(home){
+			Home.remove({'_id': request.params.home_id}, (err,home)=> {
+				if(err)
+					response.json({"error":err});
+				else{
+					response.write(JSON.stringify({"message":"Successfully deleted the entity"},null,2));
+					response.end();
+				}
+			});
+		}
+		else {				
+				response.write(JSON.stringify({type: false, message: "This page doesn't exist or you don't have rights to view this object"},null,2));
+				response.end();
+			}
 	});
 });
 module.exports = routerHome;
