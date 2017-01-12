@@ -9,6 +9,7 @@ var jwtauth = require('../lib/jwtlib.js');
 //mongoose.connect(dbConfig.url);
 
 var User = require('../models/user_model.js');
+var Home = require('../models/home_model.js');
 var secretKey = require('../../config/config.js');
 
 
@@ -59,6 +60,10 @@ routerAuth.post('/signup', (request,response,next) => {
 								});
 						}
 						else {
+							Home.update({"users.email": user.email}, {$set:{'users.$._id':user._id, 'users.$.status':1}},{"multi": true}, err=> {
+								if(err)
+								response.write(JSON.stringify({error:err, message:"An error occured"},null,2));
+							});
 							var expires = moment().add('days', 7).valueOf();
 								user.token = jwt.encode({
  								 iid: user.unique_id,
@@ -71,11 +76,12 @@ routerAuth.post('/signup', (request,response,next) => {
 
 							//user.token = jwt.sign({uid: user.unique_id, id: user._id,name: user.name}, require('../../config/config.js').secret);
 							user.save(function(err, user1) {
-                        		response.json({
+                        		response.write(JSON.stringify({
                           			 type: true,
-                            		 data: {email:user1.email, name: user1.name, expiry: expires},
+                            		 data: {email:user1.email, name: user1.name, id: user.unique_id, expiry: expires},
                             		 token: user1.token
-								});
+								},null,2));
+								response.end();
 							});
 						}
 					});	
@@ -145,7 +151,7 @@ routerAuth.post('/signin',(request,response,next) => {
 						user.save(function(err, user1) {
                         	response.json({
                           		type: true,
-                            	data: {email:user1.email, name: user1.name, expiry: expires},
+                            	data: { id: user.unique_id, email:user1.email, name: user1.name, expiry: expires},
                             	token: user1.token
 							});
 						});
