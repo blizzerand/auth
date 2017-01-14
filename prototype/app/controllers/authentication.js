@@ -98,13 +98,87 @@ routerAuth.post('/signup', (request,response,next) => {
 });
 
 
-
 routerAuth.get('/users', jwtauth, function(request, response){
 	console.log("Here");
   // do something
 });
 //routerAuth.use(tokenValidation);
 //routerAuth.use(authChecker);
+
+
+routerAuth.post('/d_signin', (request,response,next) => {
+	if(request.validation) { 
+		Home.findOne({ device_auth_code: request.body.authCode},(err,home) => {
+			if(err) {
+				response.json({
+					type: false,
+					message: "Error occured at" + err
+				})
+			}
+			else if(!home) {
+				response.json({
+					type: false,
+					message: "Home doesn't exist"
+				});
+			}
+			else {
+				var home_id = home._id;
+				User.findOne({email: request.body.email}, (err,user) => {
+					if(err) {
+					response.json({
+					type: false,
+					message: "Error occured at" + err
+						});
+					}
+					else if(!user) {
+					response.json({
+					type: false,
+					message: "User doesn't exist"
+						});
+					}
+					else {
+						var password_safe = user.validPassword(request.body.password, user.password);
+				
+						if (!password_safe) {
+
+
+					//else if(!user) {
+							response.json({	
+							type: false,
+							message: "Invalid Username/password"
+							});
+						}	
+
+						else{
+							
+							Home.update({_id:home_id}, {$set: {device_status: 01}}, (err)=> {
+								if(err) {
+									response.json({
+									type: false,
+									message: "Error occured at" + err
+									});
+								}
+								else {
+									response.json({
+									type: true,
+									code: "SUCCESS"
+									});
+								}
+
+								
+							})
+							
+						}
+
+					}
+
+				});
+
+			}
+		})
+	}
+
+});
 
 routerAuth.post('/signin',(request,response,next) => {
 	if(request.validation) { 

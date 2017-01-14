@@ -93,6 +93,8 @@ routerHome.post('/', (request,response) => {
 	home.name = request.body.name;
 	home.administrator  = request.user_data.data.id;
 	home.description = request.body.description;
+	home.device_auth_code = randomString(12);
+	home.device_status = 00;
 
 
 	home.save(err=> {
@@ -101,7 +103,7 @@ routerHome.post('/', (request,response) => {
 				response.end();
 		}
 		else{
-			User.find()
+			//User.find()
 			response.write(JSON.stringify({"code":'CREATE-SUCCESS',"message":`${home.name} created!`},null,2));
 			response.end();
 		}
@@ -217,8 +219,10 @@ routerHome.post('/:home_id/user', (request,response) => {
 routerHome.get('/:home_id/user', (request,response) => {
 
 var home = request.home;
-	Home.findOne(home,{users:1}, (err, user) =>{
+	Home.findOne({_id: home._id},{users:1}, (err, user) =>{
+		console.log(user);
 		let users = user.users;
+
         response.write(JSON.stringify({code:'GET-SUCCESS',users},null,2));
         response.end();
         });
@@ -240,7 +244,7 @@ routerHome.delete('/:home_id/user/:user_id',(request,response) => {
 				response.send();
 			}
 			else {
-				response.write(JSON.stringify({code: 'DELETE-SUCCESS'}));
+				response.write(JSON.stringify({code: 'DELETE-SUCCESS', message:"User successfully deleted"}));
 				response.send();
 			}
 		})
@@ -276,3 +280,7 @@ function isEmpty(str) {
     return (!str || 0 === str.length);
 }
 module.exports = routerHome;
+
+function randomString(length) {
+    return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+}

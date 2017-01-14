@@ -1,5 +1,7 @@
 var express = require('express');
 var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 //var passport = require('passport');
 var morgan = require('morgan');
 var jwtauth = require('./app/lib/jwtlib.js');
@@ -37,8 +39,20 @@ next();
 app.use('/user',userRouter);
 app.use('/home',homeRouter);
 
+io.on('connection', function (socket) {
+  socket.on('echo', function (data, response) {
+  	console.log(data);
+    response(data);
+    setTimeout(function(){
+    	socket.emit('auto',{'message':'Sent a message 4seconds after connection!'});
+  		}, 4000);
+  });
 
+  socket.on('message', function (data, response) {
+  	console.log(data);
+});
 
-
+});
+  
 console.log("listening to port ${port}");
-app.listen(port);
+http.listen(port);

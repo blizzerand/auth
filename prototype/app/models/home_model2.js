@@ -3,21 +3,29 @@ var User = require('./user_model');
 
 Schema = mongoose.Schema;
 
+Appliance = new Schema({
+	appliance_name: {type:String},
+	appliance_id: {type:String},
+	appliance_description: {type:String},
+	keywords: [{ type: String}],
+	appliance_type: { type: String},
+	appliance_status: { light: { write_state: Number, read_state: Number },
+					fan: {write_state: Number, read_state: Number, write_speed: Number, read_speed: Number}
+	}
 
+});
 
 Room= new Schema({
 	name: {type: String, required:true},
-
-
+	device_auth_code: {type: String},
+	
 	alt_name: {type:String},
 	keywords: [{type: String}],
-	
+	appliance: [Appliance]
 });
 
 Home = new Schema({
 	name: { type: String, required: true},
-	device_auth_code: {type: String},
-	device_status: {type: Number},
 	description: {type: String},
 	administrator: {type : mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
 	
@@ -28,7 +36,6 @@ Home = new Schema({
 		status: { type: Number}
 	}],
 	rooms: [Room]
-	
 
 	
 });
