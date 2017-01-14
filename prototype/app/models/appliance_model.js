@@ -13,7 +13,7 @@ Appliance = new Schema({
 	description: {type:String},
 	keywords: [{ type: String}],
 	type: { type: String},
-	status: {  state: Number, read_state: Number, speed: Number, read_speed: Number}
+	status: {  state: {type:Number, default: 0}, read_state: Number, speed: Number, read_speed: Number}
 	
 
 });

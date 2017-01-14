@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+
+
 //var passport = require('passport');
 var morgan = require('morgan');
 var jwtauth = require('./app/lib/jwtlib.js');
@@ -22,6 +24,7 @@ var authRouter = require('./app/controllers/authentication.js');
 var userRouter = require('./app/controllers/user.js');
 
 
+
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", 'GET, POST, DELETE, PUT');
@@ -39,7 +42,8 @@ next();
 app.use('/user',userRouter);
 app.use('/home',homeRouter);
 
-io.on('connection', function (socket) {
+
+/*io.on('connection', function (socket) {
   socket.on('echo', function (data, response) {
   	console.log(data);
     response(data);
@@ -53,6 +57,6 @@ io.on('connection', function (socket) {
 });
 
 });
-  
+  */
 console.log("listening to port ${port}");
 http.listen(port);

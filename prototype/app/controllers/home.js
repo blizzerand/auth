@@ -13,11 +13,15 @@ mongoose.connect(dbConfig.url);
 var Home = require('../models/home_model.js');
 var User  = require('../models/user_model.js');
 
+//var returnRouter = function(io) {
+	
+
 
 routerHome.use(( request,response,next) => {
 	console.log(request.url);
 	next();
 });
+
 
 routerHome.use(['/:home_id/user','/:home_id',':home_id/room'], (request,response,next) => {
 
@@ -252,7 +256,10 @@ routerHome.delete('/:home_id/user/:user_id',(request,response) => {
 
 })
 
-
+routerHome.use(( request,response,next) => {
+	console.log("Helo");
+	next();
+});
 	
 
 
@@ -271,16 +278,20 @@ routerHome.delete('/:home_id/user/:user_id',(request,response) => {
 //});
 routerHome.use('/:home_id/room',roomRouter);
 
+module.exports = routerHome;
 
-var inviteUser = function() {
-	//toDO
+function inviteUser() {
+
+	//To be added here
 }
+
 
 function isEmpty(str) {
     return (!str || 0 === str.length);
 }
-module.exports = routerHome;
+
 
 function randomString(length) {
     return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
 }
+

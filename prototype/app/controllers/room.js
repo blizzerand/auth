@@ -9,10 +9,6 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var Home = require('../models/home_model.js');
 var Appliance = require('../models/appliance_model.js');
 
-routerRoom.use(( request,response,next) => {
-	console.log("Helo");
-	next();
-});
 
 
 routerRoom.post('/', (request,response) => {
@@ -211,7 +207,7 @@ routerRoom.get('/:room_id/appliance/:appliance_id', (request,response) => {
 	}
 })
 
-routerRoom.put('/:room_id/appliance/:appliance_id', (request,response) => { 
+routerRoom.put('/:room_id/appliance/:appliance_id', (request,response,next) => { 
 	home = request.home;
 	if(home) {
 		room_id = request.params.room_id;
@@ -228,17 +224,24 @@ routerRoom.put('/:room_id/appliance/:appliance_id', (request,response) => {
 				response.end();
 			}
 			else {
-			
+			if(!isEmptyObject(request.body.appliance_status)) {
+				appliance.status = request.body.appliance_status;
+				
+			}
+ 
 			if(!isEmpty(request.body.appliance_name))
 				appliance.name = request.body.appliance_name;
 			else if(!isEmpty(request.body.appliance_type))
 				appliance.type = request.body.appliance_type;
 			else if(!isEmpty(request.body.appliance_id))
 				appliance.id = request.body.appliance_id;
-			else if(!isEmpty(request.body.appliance_status))
-				appliance.status = request.body.appliance_status;
+			
+				
 			else if(!isEmpty(request.body.appliance_description))
 				appliance.description = request.body.appliance_description;
+			
+			console.log(request.body.appliance_status);
+			console.log(appliance.status);
 
 			appliance.save(error => {
 
@@ -247,10 +250,8 @@ routerRoom.put('/:room_id/appliance/:appliance_id', (request,response) => {
 					response.end();
 				}
 				else{
-			//User.find()
-					response.write(JSON.stringify({"code":'UPDATE-SUCCESS',"message":`${appliance.name} updated`},null,2));
-					response.end();
-				}
+					next();
+					}				
 			})
 			}
 		})
@@ -260,6 +261,19 @@ routerRoom.put('/:room_id/appliance/:appliance_id', (request,response) => {
 		response.end();
 	}
 })
+
+routerRoom.put('/:room_id/appliance/:appliance_id', (request,response) => {
+	console.log("Hello");
+   /*io.socket.emit('datapack', {msg:"Helloworld"} , function (response) {
+  	console.log(response);
+  });
+*/
+  				
+
+
+	response.write(JSON.stringify({"code":'UPDATE-SUCCESS',"message":`Appliance updated`},null,2));
+	response.end();
+});
 
 routerRoom.delete('/:room_id/appliance/:appliance_id', (request,response) => { 
 	home = request.home;
@@ -282,7 +296,11 @@ routerRoom.delete('/:room_id/appliance/:appliance_id', (request,response) => {
 		response.end();
 	}
 })
+module.exports = routerRoom;
 
+function isEmptyObject(obj) {
+  return !Object.keys(obj).length;
+}
 
 function isEmpty(str) {
     return (!str || 0 === str.length);
@@ -290,4 +308,4 @@ function isEmpty(str) {
 //	Home.findOne({rooms:
 //			 { elemMatch: 
 //			 	{ 'appliance._id': appliance_id }}}, {'rooms.$':home_id}, 
- module.exports = routerRoom;
+
