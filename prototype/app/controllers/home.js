@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 var dbConfig = require('../../config/db.js');
 //Setting the router
 var routerHome = express.Router();
-var roomRouter = require('./room.js');
+
 var validator = require('validator');
 
 
@@ -15,7 +15,9 @@ var User  = require('../models/user_model.js');
 
 //var returnRouter = function(io) {
 	
+var returnRouter = function(io) {
 
+var roomRouter = require('./room.js')(io);
 
 routerHome.use(( request,response,next) => {
 	console.log(request.url);
@@ -278,7 +280,10 @@ routerHome.use(( request,response,next) => {
 //});
 routerHome.use('/:home_id/room',roomRouter);
 
-module.exports = routerHome;
+return routerHome;
+}
+
+module.exports = returnRouter;
 
 function inviteUser() {
 

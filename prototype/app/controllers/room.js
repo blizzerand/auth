@@ -9,7 +9,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var Home = require('../models/home_model.js');
 var Appliance = require('../models/appliance_model.js');
 
-
+var returnRouter = function(io) {
 
 routerRoom.post('/', (request,response) => {
 	home = request.home;
@@ -209,6 +209,9 @@ routerRoom.get('/:room_id/appliance/:appliance_id', (request,response) => {
 
 routerRoom.put('/:room_id/appliance/:appliance_id', (request,response,next) => { 
 	home = request.home;
+	io = request.io;
+
+
 	if(home) {
 		room_id = request.params.room_id;
 		appliance_id = request.params.appliance_id;
@@ -240,8 +243,8 @@ routerRoom.put('/:room_id/appliance/:appliance_id', (request,response,next) => {
 			else if(!isEmpty(request.body.appliance_description))
 				appliance.description = request.body.appliance_description;
 			
-			console.log(request.body.appliance_status);
-			console.log(appliance.status);
+			request.appliance_id = appliance.id;
+			request.appliance_status = appliance.status.state;
 
 			appliance.save(error => {
 
@@ -262,18 +265,25 @@ routerRoom.put('/:room_id/appliance/:appliance_id', (request,response,next) => {
 	}
 })
 
+
 routerRoom.put('/:room_id/appliance/:appliance_id', (request,response) => {
-	console.log("Hello");
-   /*io.socket.emit('datapack', {msg:"Helloworld"} , function (response) {
-  	console.log(response);
-  });
-*/
-  				
-
-
-	response.write(JSON.stringify({"code":'UPDATE-SUCCESS',"message":`Appliance updated`},null,2));
+	response.write(JSON.stringify({type:false,code: "UPDATE-SUCCESS", message: "Success"}));
 	response.end();
+   // socket.emit('fuckedup',{'message':"TEsting"});
+    
+  //});
+	
+
+
+ /* socket.on('message', function (data, response) {
+  	console.log(data);
+});*/
+
+
+  
+	
 });
+
 
 routerRoom.delete('/:room_id/appliance/:appliance_id', (request,response) => { 
 	home = request.home;
@@ -296,7 +306,9 @@ routerRoom.delete('/:room_id/appliance/:appliance_id', (request,response) => {
 		response.end();
 	}
 })
-module.exports = routerRoom;
+return routerRoom;
+}
+module.exports = returnRouter;
 
 function isEmptyObject(obj) {
   return !Object.keys(obj).length;
@@ -305,7 +317,3 @@ function isEmptyObject(obj) {
 function isEmpty(str) {
     return (!str || 0 === str.length);
 }
-//	Home.findOne({rooms:
-//			 { elemMatch: 
-//			 	{ 'appliance._id': appliance_id }}}, {'rooms.$':home_id}, 
-
