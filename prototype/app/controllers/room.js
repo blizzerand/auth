@@ -267,8 +267,17 @@ routerRoom.put('/:room_id/appliance/:appliance_id', (request,response,next) => {
 
 
 routerRoom.put('/:room_id/appliance/:appliance_id', (request,response) => {
+	console.log(request.appliance_id);
+
+	let id = request.appliance_id;
+	let status = request.appliance_status;
+	io = request.io;
+	io.sockets.emit('message', {'appliance_id':id, 'appliance_status': status});
+
 	response.write(JSON.stringify({type:false,code: "UPDATE-SUCCESS", message: "Success"}));
 	response.end();
+
+
    // socket.emit('fuckedup',{'message':"TEsting"});
     
   //});
